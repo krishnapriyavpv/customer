@@ -32,9 +32,9 @@ class _HomeNavPageState extends State<HomeNavPage> {
       // drawer: SideNavBar(),
       appBar: AppBar(
         title: const Text(
-          "Juice Point",
+          "Storefront Customer",
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 20,
           ),
         ),
@@ -78,15 +78,11 @@ class _HomeNavPageState extends State<HomeNavPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.restaurant_menu_rounded),
-            label: 'Menu',
+            label: 'Cart',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.receipt_long_rounded),
-            label: 'Order',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'History',
+            label: 'Profile',
           ),
         ],
       ),
