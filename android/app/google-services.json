@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "732926640178",
+    "project_id": "storefront-db898",
+    "storage_bucket": "storefront-db898.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732926640178:android:777bdde7b420b070b2fc2b",
+        "android_client_info": {
+          "package_name": "com.customerstorefront.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpHI5Z1U20ihOpQPKi62Ig6DQd6OkfG7o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732926640178:android:9e2b584e2957ced3b2fc2b",
+        "android_client_info": {
+          "package_name": "com.storefrontadmin.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpHI5Z1U20ihOpQPKi62Ig6DQd6OkfG7o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
