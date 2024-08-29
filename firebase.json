@@ -20,6 +20,12 @@
     }
   },
   "hosting": {
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
     "source": ".",
     "ignore": [
       "firebase.json",
