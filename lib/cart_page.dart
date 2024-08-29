@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CartPage extends StatefulWidget {
   final List<Map<String, dynamic>> products;
@@ -40,10 +41,37 @@ class CartPageState extends State<CartPage> {
     super.dispose();
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Payment Successful: ${response.paymentId}')),
-    );
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    // Prepare the transaction data
+    Map<String, dynamic> transactionData = {
+      'payment_id': response.paymentId,
+      'amount': _subTotal,
+      'timestamp': Timestamp.now(),
+      'products': widget.products
+          .map((product) => {
+                'prod_id': product['prod_id'],
+                'prod_name': product['prod_name'],
+                'unit_price': product['unit_price'],
+              })
+          .toList(),
+    };
+
+    // Insert the transaction data into Firestore
+    try {
+      await FirebaseFirestore.instance
+          .collection('transactions')
+          .add(transactionData);
+
+      // Show a success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Payment Successful: ${response.paymentId}')),
+      );
+    } catch (e) {
+      // Handle any errors during the database insertion
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to save transaction: $e')),
+      );
+    }
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -107,7 +135,7 @@ class CartPageState extends State<CartPage> {
                           ),
                           trailing: Text(
                             '₹${product['unit_price']}',
-                            style: TextStyle(fontSize: 16),
+                            style: const TextStyle(fontSize: 16),
                           ),
                         ),
                       );

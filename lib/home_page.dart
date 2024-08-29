@@ -13,10 +13,16 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   final List<Map<String, dynamic>> _selectedProducts = [];
+  String _searchQuery = ''; // Variable to hold the search query
 
   Future<List<Map<String, dynamic>>> fetchProducts() async {
-    final QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection('inventory_list').get();
+    Query query = FirebaseFirestore.instance.collection('inventory_list');
+
+    if (_searchQuery.isNotEmpty) {
+      query = query.where('b_id', isEqualTo: _searchQuery);
+    }
+
+    final QuerySnapshot snapshot = await query.get();
 
     return snapshot.docs
         .map((doc) => doc.data() as Map<String, dynamic>)
@@ -54,16 +60,23 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Home Page'),
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        //     child: IconButton(
-        //       icon: const Icon(Icons.shopping_cart),
-        //       onPressed: _goToCart,
-        //     ),
-        //   ),
-        // ],
+        title: TextField(
+          decoration: const InputDecoration(
+            hintText: 'Search by b_id...',
+            border: InputBorder.none,
+          ),
+          onChanged: (value) {
+            setState(() {
+              _searchQuery = value;
+            });
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: _goToCart,
+          ),
+        ],
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: fetchProducts(),
@@ -95,7 +108,7 @@ class HomePageState extends State<HomePage> {
                         height: 120,
                         width: double.infinity,
                         child: Image.network(
-                          product['image'],
+                          product['image'], // URL for the image
                           fit: BoxFit.cover,
                         ),
                       ),
