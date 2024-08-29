@@ -1,8 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:customer/cart_page.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+  final Function(List<Map<String, dynamic>>) onCartUpdate;
+
+  const HomePage({super.key, required this.onCartUpdate});
+
+  @override
+  HomePageState createState() => HomePageState();
+}
+
+class HomePageState extends State<HomePage> {
+  final List<Map<String, dynamic>> _selectedProducts = [];
 
   Future<List<Map<String, dynamic>>> fetchProducts() async {
     final QuerySnapshot snapshot =
@@ -13,22 +23,46 @@ class HomePage extends StatelessWidget {
         .toList();
   }
 
+  void _addToCart(Map<String, dynamic> product) {
+    setState(() {
+      _selectedProducts.add(product);
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${product['prod_name']} added to cart'),
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.green,
+      ),
+    );
+
+    // Update the cart in HomeNavPage
+    widget.onCartUpdate(_selectedProducts);
+  }
+
+  void _goToCart() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CartPage(products: _selectedProducts),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home Page'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                // Add your search functionality here
-              },
-            ),
-          ),
-        ],
+        // actions: [
+        //   Padding(
+        //     padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        //     child: IconButton(
+        //       icon: const Icon(Icons.shopping_cart),
+        //       onPressed: _goToCart,
+        //     ),
+        //   ),
+        // ],
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: fetchProducts(),
@@ -53,18 +87,31 @@ class HomePage extends StatelessWidget {
                 return Card(
                   elevation: 4.0,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(product['prod_name'],
+                      SizedBox(
+                        height: 120,
+                        width: double.infinity,
+                        child: Image.network(
+                          product['image'],
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(
+                          product['prod_name'],
                           style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      Text('Price: \$${product['unit_price']}'),
-                      Text('Quantity: ${product['quantity']}'),
-                      IconButton(
-                        icon: const Icon(Icons.add),
-                        onPressed: () {
-                          // Handle add to cart or other action
-                        },
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text('Price: ₹${product['unit_price']}'),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            _addToCart(product);
+                          },
+                        ),
                       ),
                     ],
                   ),

@@ -13,6 +13,8 @@ class HomeNavPage extends StatefulWidget {
 class _HomeNavPageState extends State<HomeNavPage> {
   late PageController _pageController;
   int _currentPage = 0;
+  List<Map<String, dynamic>> _cartProducts =
+      []; // Add this line to hold cart data
 
   @override
   void initState() {
@@ -26,28 +28,32 @@ class _HomeNavPageState extends State<HomeNavPage> {
     super.dispose();
   }
 
+  void _updateCart(List<Map<String, dynamic>> products) {
+    setState(() {
+      _cartProducts = products;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // drawer: SideNavBar(),
       appBar: AppBar(
+        backgroundColor: Colors.blueAccent,
         title: const Text(
           "Storefront Customer",
           style: TextStyle(
-            color: Colors.black,
-            fontSize: 20,
+            color: Colors.white,
+            fontSize: 25,
           ),
         ),
-        // backgroundColor: primaryColor,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: PageView(
         controller: _pageController,
-        children: const <Widget>[
-          HomePage(),
-          // MenuPage(),
-          CartPage(),
-          ProfilePage(),
+        children: <Widget>[
+          HomePage(onCartUpdate: _updateCart), // Pass callback to HomePage
+          CartPage(products: _cartProducts), // Pass cart data to CartPage
+          const ProfilePage(),
         ],
         onPageChanged: (int index) {
           setState(() {
@@ -56,8 +62,7 @@ class _HomeNavPageState extends State<HomeNavPage> {
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor:
-            Colors.blue, // Replace with your desired background color
+        backgroundColor: Colors.blueAccent,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white54,
         currentIndex: _currentPage,
@@ -77,7 +82,7 @@ class _HomeNavPageState extends State<HomeNavPage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.restaurant_menu_rounded),
+            icon: Icon(Icons.shopping_cart),
             label: 'Cart',
           ),
           BottomNavigationBarItem(

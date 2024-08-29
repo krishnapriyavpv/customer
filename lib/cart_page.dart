@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class CartPage extends StatefulWidget {
-  const CartPage({super.key});
+  final List<Map<String, dynamic>> products;
+
+  const CartPage({super.key, required this.products});
 
   @override
   CartPageState createState() => CartPageState();
@@ -10,6 +12,7 @@ class CartPage extends StatefulWidget {
 
 class CartPageState extends State<CartPage> {
   late Razorpay _razorpay;
+  double _subTotal = 0;
 
   @override
   void initState() {
@@ -18,6 +21,17 @@ class CartPageState extends State<CartPage> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+
+    _calculateSubTotal(); // Calculate subtotal when page loads
+
+    // Debugging: Print the products list to ensure it's passed correctly
+    print('Products in Cart: ${widget.products}');
+  }
+
+  void _calculateSubTotal() {
+    _subTotal = widget.products.fold(0, (sum, product) {
+      return sum + (product['unit_price'] as int);
+    }).toDouble();
   }
 
   @override
@@ -27,21 +41,18 @@ class CartPageState extends State<CartPage> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    // Handle payment success here
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Payment Successful: ${response.paymentId}')),
     );
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    // Handle payment error here
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Payment Error: ${response.message}')),
     );
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    // Handle external wallet here
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('External Wallet: ${response.walletName}')),
     );
@@ -50,7 +61,7 @@ class CartPageState extends State<CartPage> {
   void _startPayment() {
     var options = {
       'key': 'rzp_test_1DP5mmOlF5G5ag',
-      'amount': 15000, // Amount in paise (e.g., 15000 paise = ₹150.00)
+      'amount': (_subTotal * 100).toInt(), // Amount in paise
       'name': 'Test Shop',
       'description': 'Payment for cart items',
       'retry': {'enabled': true, 'max_count': 1},
@@ -67,43 +78,93 @@ class CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cart Page'),
+        title: const Text('Your Shopping Cart'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'This is your Cart Page!',
-              style: TextStyle(fontSize: 24),
-            ),
-            ElevatedButton(
-              onPressed: _startPayment,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFF4F5A), // Customize the color
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+      body: widget.products.isEmpty
+          ? const Center(child: Text('No items in the cart'))
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: widget.products.length,
+                    itemBuilder: (context, index) {
+                      final product = widget.products[index];
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 30, // Adjust size as needed
+                            backgroundImage: NetworkImage(
+                              product['image'], // URL for the image
+                            ),
+                          ),
+                          title: Text(
+                            product['prod_name'],
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          trailing: Text(
+                            '₹${product['unit_price']}',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-              child: const SizedBox(
-                width: 200,
-                child: Center(
-                  child: Text(
-                    'Pay with Razorpay',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w700,
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Sub Total',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        '₹${_subTotal.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                BottomAppBar(
+                  child: ElevatedButton(
+                    onPressed: _startPayment,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          const Color(0xFFFF4F5A), // Customize the color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: const SizedBox(
+                      width: double.infinity,
+                      child: Center(
+                        child: Text(
+                          'Check Out',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
     );
   }
 }
