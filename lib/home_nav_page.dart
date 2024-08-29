@@ -1,6 +1,7 @@
 import 'package:customer/cart_page.dart';
 import 'package:customer/home_page.dart';
 import 'package:customer/profile_page.dart';
+import 'package:customer/side_nav_page.dart';
 import 'package:flutter/material.dart';
 
 class HomeNavPage extends StatefulWidget {
@@ -48,6 +49,7 @@ class _HomeNavPageState extends State<HomeNavPage> {
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
+      drawer: SideNavPage(),
       body: PageView(
         controller: _pageController,
         children: <Widget>[

@@ -26,9 +26,28 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:732926640178:android:9e2b584e2957ced3b2fc2b",
+        "mobilesdk_app_id": "1:732926640178:android:caa720b6ca3a9c51b2fc2b",
         "android_client_info": {
-          "package_name": "com.storefrontadmin.app"
+          "package_name": "com.example2.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpHI5Z1U20ihOpQPKi62Ig6DQd6OkfG7o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732926640178:android:afc629e83f121a4fb2fc2b",
+        "android_client_info": {
+          "package_name": "com.store.com"
         }
       },
       "oauth_client": [],
