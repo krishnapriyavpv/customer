@@ -18,7 +18,13 @@ class SideMenu extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            child: Image.asset("assets/images/logo.png"),
+            child: Column(
+              children: [
+                SizedBox(
+                    width: 100, child: Image.asset("assets/images/logo.png")),
+                const Text(" StoreFront Vendor")
+              ],
+            ),
           ),
           DrawerListTile(
             title: "Dashboard",

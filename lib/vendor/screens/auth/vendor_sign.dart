@@ -349,13 +349,13 @@ class _VendorSignUpPage2State extends State<VendorSignUpPage2> {
                   ? null
                   : () async {
                       await _captureAndUploadPng();
-                     Navigator.of(context).pop(); // Close the QR popup
+                      Navigator.of(context).pop(); // Close the QR popup
 
-                    // Pop all pages and navigate to the login page
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/login', // Replace with the route name for your login page
-                      (Route<dynamic> route) => false);
+                      // Pop all pages and navigate to the login page
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          '/login', // Replace with the route name for your login page
+                          (Route<dynamic> route) => false);
                     },
               child: const Text('Export'),
             ),
@@ -467,8 +467,8 @@ class _VendorSignUpPage2State extends State<VendorSignUpPage2> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         setState(() {
-                          data = _storeNameController
-                              .text; // Update the data with the store name
+                          data =
+                              "https://storefront-db898.web.app/${_storeNameController.text}"; // Update the data with the store name
                         });
                         if (data.isNotEmpty) {
                           _showQrPopup();

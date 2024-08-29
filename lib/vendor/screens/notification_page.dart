@@ -298,26 +298,27 @@ class _SendNotificationPageState extends State<SendNotificationPage> {
               },
             ),
           ),
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                // Call sendNotificationsToAllUsers when the button is pressed
-                if (_titleController.text.isNotEmpty &&
-                    _messageController.text.isNotEmpty) {
-                  sendNotificationsToAllUsers(
-                      _messageController.text, _titleController.text);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Please enter both title and message')),
-                  );
-                }
-              },
-              child: _loading
-                  ? const CircularProgressIndicator()
-                  : const Text('Send to All'),
-            ),
-          ),
+          // Center(
+          //   child:
+          //  ElevatedButton(
+          //   onPressed: () {
+          //     // Call sendNotificationsToAllUsers when the button is pressed
+          //     if (_titleController.text.isNotEmpty &&
+          //         _messageController.text.isNotEmpty) {
+          //       sendNotificationsToAllUsers(
+          //           _messageController.text, _titleController.text);
+          //     } else {
+          //       ScaffoldMessenger.of(context).showSnackBar(
+          //         const SnackBar(
+          //             content: Text('Please enter both title and message')),
+          //       );
+          //     }
+          //   },
+          //   child: _loading
+          //       ? const CircularProgressIndicator()
+          //       : const Text('Send to All'),
+          // ),
+          // ),
           Center(
             child: ElevatedButton(
               onPressed: _showCustomTemplateDialog,

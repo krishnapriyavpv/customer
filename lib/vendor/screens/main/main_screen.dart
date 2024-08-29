@@ -5,6 +5,7 @@ import 'package:customer/vendor/screens/digital_marketing_page.dart';
 import 'package:customer/vendor/screens/inventory_list_page.dart';
 import 'package:customer/vendor/screens/notification_page.dart';
 import 'package:customer/vendor/screens/orders_page.dart';
+import 'package:customer/vendor/screens/profile_page.dart';
 import 'package:customer/vendor/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -56,8 +57,8 @@ class MainScreenState extends State<MainScreen> {
                   DashboardScreen(),
                   DashboardScreen(),
                   DigitalMarketingPage(),
-            SendNotificationPage(),
-                  ProfilePage(),
+                  SendNotificationPage(),
+                  VendorProfilePage(),
                   DashboardScreen()
                 ],
               ),

@@ -19,7 +19,10 @@ class _SideNavPageState extends State<SideNavPage> {
           const DrawerHeader(child: Text("StoreFront")),
           ListTile(
             leading: const Icon(Icons.login),
-            title: const Text("Login Portal"),
+            title: const Text(
+              "Login Portal",
+              style: TextStyle(color: Colors.black),
+            ),
             tileColor: Colors.blue[100],
             onTap: () {
               Navigator.push(
